@@ -14,9 +14,9 @@ macro_rules! make_entrypoint {
     ($fn:expr) => {
         use winapi::shared::minwindef::HINSTANCE;
         #[no_mangle]
-        pub extern "stdcall" fn DllMain(_hinst_dll: HINSTANCE, fdw_reason: u32, _: *mut c_void) {
+        pub extern "stdcall" fn DllMain(hinst_dll: HINSTANCE, fdw_reason: u32, _: *mut c_void) {
             if fdw_reason == 1 {
-                thread::spawn($fn);
+                thread::spawn(move || $fn(hinst_dll));
             }
         }
     };
